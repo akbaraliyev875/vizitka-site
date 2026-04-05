@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-black text-white flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full bg-white/5 p-10 rounded-[40px] border border-white/10 text-center">
+        <h2 class="text-2xl font-bold text-blue-500 mb-6 uppercase italic">7 KUN TEKIN SINOV</h2>
+        <div class="space-y-4">
+            <input id="name" placeholder="Ismingiz" class="w-full bg-black border border-white/10 p-4 rounded-2xl outline-none">
+            <input id="services" placeholder="Sohangiz" class="w-full bg-black border border-white/10 p-4 rounded-2xl outline-none">
+            <input id="tg" placeholder="Telegram @" class="w-full bg-black border border-white/10 p-4 rounded-2xl outline-none">
+            <input id="card" type="text" maxlength="16" placeholder="Karta raqamingiz" class="w-full bg-blue-900/10 border border-blue-500/20 p-4 rounded-2xl text-blue-400 font-mono">
+            <button onclick="reg()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all">SINOVNI BOSHLASH</button>
+        </div>
+    </div>
+    <script>
+        async function reg() {
+            const data = { name: document.getElementById('name').value, services: document.getElementById('services').value, telegram: document.getElementById('tg').value, cardNumber: document.getElementById('card').value };
+            const res = await fetch('http://localhost:5000/api/register', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            const result = await res.json();
+            window.location.href = `preview.html?id=${result.userId}` + (result.alreadyUsed ? "&forcePay=true" : "");
+        }
+    </script>
+</body></html>

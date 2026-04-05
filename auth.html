@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans text-gray-800">
+    <div class="max-w-md w-full bg-white p-8 rounded-[40px] shadow-2xl border border-orange-100 text-center">
+        <h2 id="title" class="text-2xl font-black text-orange-600 uppercase italic mb-6">Kirish</h2>
+        <div class="space-y-3">
+            <input id="email" placeholder="Gmail" class="w-full border border-gray-200 p-4 rounded-2xl outline-orange-500">
+            <input id="pass" type="password" placeholder="Parol" class="w-full border border-gray-200 p-4 rounded-2xl outline-orange-500">
+            <div id="regFields" class="hidden space-y-3">
+                <input id="name" placeholder="Ism Sharif" class="w-full border border-gray-200 p-4 rounded-2xl">
+                <input id="job" placeholder="Kasbingiz" class="w-full border border-gray-200 p-4 rounded-2xl">
+                <input id="comp" placeholder="Kompaniya" class="w-full border border-gray-200 p-4 rounded-2xl">
+                <input id="addr" placeholder="Manzil" class="w-full border border-gray-200 p-4 rounded-2xl">
+                <input id="phone" placeholder="Telefon" class="w-full border border-gray-200 p-4 rounded-2xl">
+                <input id="web" placeholder="Veb-sayt" class="w-full border border-gray-200 p-4 rounded-2xl">
+                <input id="last4" maxlength="4" placeholder="Karta oxirgi 4 raqami" class="w-full border-2 border-orange-500 p-4 rounded-2xl font-black text-orange-600">
+                <div class="border border-dashed border-gray-300 p-3 rounded-2xl text-left bg-gray-50">
+                    <p class="text-[9px] font-bold text-gray-400 mb-1 uppercase">Logo tanlang:</p>
+                    <input id="logo" type="file" accept="image/*" class="text-xs">
+                </div>
+            </div>
+            <button onclick="handleAuth()" class="w-full bg-orange-500 text-white py-5 rounded-2xl font-black shadow-lg hover:scale-[1.02] transition-all">DAVOM ETISH</button>
+            <button onclick="toggleAuth()" class="w-full text-[10px] text-gray-400 mt-4 uppercase font-bold tracking-widest cursor-pointer">Rejimni o'zgartirish</button>
+        </div>
+    </div>
+    <script>
+        let curMode = 'login';
+        function toggleAuth() {
+            curMode = (curMode === 'login') ? 'register' : 'login';
+            document.getElementById('regFields').classList.toggle('hidden');
+            document.getElementById('title').innerText = (curMode === 'login') ? 'Kirish' : 'Ro\'yxatdan o\'tish';
+        }
+        async function handleAuth() {
+            const fd = new FormData();
+            fd.append('email', document.getElementById('email').value);
+            fd.append('password', document.getElementById('pass').value);
+            if(curMode === 'register') {
+                fd.append('name', document.getElementById('name').value);
+                fd.append('job', document.getElementById('job').value);
+                fd.append('company', document.getElementById('comp').value);
+                fd.append('address', document.getElementById('addr').value);
+                fd.append('phone', document.getElementById('phone').value);
+                fd.append('web', document.getElementById('web').value);
+                fd.append('last4', document.getElementById('last4').value);
+                if(document.getElementById('logo').files[0]) fd.append('logo', document.getElementById('logo').files[0]);
+            }
+            const res = await fetch(`http://localhost:5000/api/${curMode}`, { method: 'POST', body: fd });
+            const data = await res.json();
+            if(data.success) window.location.href = `preview.html?id=${data.userId}`;
+            else alert(data.error);
+        }
+    </script>
+</body></html>
